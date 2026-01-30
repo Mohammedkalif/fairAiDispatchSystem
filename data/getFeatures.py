@@ -43,7 +43,7 @@ def extractFeatures(routeData):
         num_stops = len(job_stops)
 
         stop_density = num_stops / total_distance
-        parking_difficulty = stop_density * traffic_index
+        parking_stress = stop_density * traffic_index
 
         features[route_id] = {
             "total_distance": total_distance,
@@ -51,7 +51,7 @@ def extractFeatures(routeData):
             "stops": num_stops,
             "stop_density": stop_density,
             "traffic_index": traffic_index,
-            "parking_difficulty": parking_difficulty
+            "parking_stress": parking_stress,
         }
 
     return features
