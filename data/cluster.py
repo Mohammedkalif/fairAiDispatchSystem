@@ -63,26 +63,6 @@ def plot_clusters(data, labels):
     plt.legend()
     plt.show()
 
-# def getRoute():
-#     API = os.getenv("API")
-#     url = "https://api.openrouteservice.org/v2/directions/driving-car"
-#     header = {
-#     "Authorization": os.getenv("API"),
-#     "Content-Type": "application/json"
-#     }
-
-#     jsonPayload = {
-#         "coordinates":[
-#             #lan , lat (not the other way round)
-#             [78.17611956533857 , 11.683720337350456],
-#             [78.13902764781922 , 11.669020198322118]
-#         ],
-#         "alternative_routes":{
-#             "target_count":3,
-#             "share_factor":0.6
-#         }
-#     }
-
 
 def main():
     with open("data/stoppings.json") as f:
