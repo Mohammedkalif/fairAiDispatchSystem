@@ -6,7 +6,7 @@ from typing import List, Dict
 
 
 ORS_OPTIMIZATION_URL = "https://api.openrouteservice.org/optimization"
-DATA_DIR = "data"
+DATA_DIR = "data/jsonFiles"
 
 STARTING_POINT = [78.17611956533857, 11.683720337350456]
 ENDING_POINT   = [78.15988980734215, 11.675583838261142]
@@ -68,7 +68,6 @@ def send_optimization_request(
 
 
 def save_route(filepath: str, data: Dict) -> None:
-    """Save route data to JSON file."""
     with open(filepath, "w") as file:
         json.dump(data, file, indent=2)
 

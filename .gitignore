@@ -12,3 +12,5 @@ wheels/
 modeltraining/
 # env
 .env
+# Data files
+data/jsonFiles/

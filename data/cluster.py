@@ -65,7 +65,7 @@ def plot_clusters(data, labels):
 
 
 def main():
-    with open("data/stoppings.json") as f:
+    with open("data/jsonFiles/stoppings.json") as f:
         stoppings = np.array(json.load(f))
 
     normalized_stoppings = fit_and_save_scaler(stoppings)
@@ -82,7 +82,7 @@ def main():
         )
     plot_clusters(normalized_stoppings , labels)
 
-    with open("data/clustered_stoppings.json", "w") as f:
+    with open("data/jsonFiles/clustered_stoppings.json", "w") as f:
         json.dump(clustered_stoppings, f, indent=1)
 
 
