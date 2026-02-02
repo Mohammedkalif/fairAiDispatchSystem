@@ -5,9 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
-from sklearn.neighbors import NearestCentroid
-# from dotenv import load_dotenv
-# load_dotenv()
+from sklearn.neighbors import NearestCentroid 
 SCALER_PATH = "data/stopping_scaler.pkl"
 
 def fit_and_save_scaler(data, path=SCALER_PATH):
@@ -52,7 +50,7 @@ def cluster_stoppings(normalized_stoppings, eps=0.5, min_samples=5):
     return merge_noise_with_nearest_cluster(normalized_stoppings, labels)
 
 def plot_clusters(data, labels):
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(6,6))
     unique_labels = np.unique(labels)
     for label in unique_labels:
         mask = labels == label
@@ -65,8 +63,14 @@ def plot_clusters(data, labels):
 
 
 def main():
-    with open("data/jsonFiles/stoppings.json") as f:
-        stoppings = np.array(json.load(f))
+    with open("data/jsonFiles/stoppingandpackage.json") as f:
+        data = json.load(f)
+    stop_location_dict = {
+    stop["stop_id"]: stop["location"]
+    for stop in data
+    }
+    stoppings = list(stop_location_dict.values())
+    stoppings = np.array(stoppings, dtype=float)
 
     normalized_stoppings = fit_and_save_scaler(stoppings)
     scaler = load_scaler()
