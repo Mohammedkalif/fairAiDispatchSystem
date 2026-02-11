@@ -1,5 +1,6 @@
 import json
 import pickle as pkl
+from tracemalloc import stop
 import requests as req
 import numpy as np
 import matplotlib.pyplot as plt
@@ -59,15 +60,15 @@ def plot_clusters(data, labels):
     plt.xlabel("Feature 1")
     plt.ylabel("Feature 2")
     plt.legend()
-    plt.show()
+    plt.savefig("data/cluster_plot.png")
 
 
 def main():
     with open("data/jsonFiles/stoppingandpackage.json") as f:
         data = json.load(f)
     stop_location_dict = {
-    stop["stop_id"]: stop["location"]
-    for stop in data
+        stop["stop_id"]: stop["location"]
+        for stop in data
     }
     stoppings = list(stop_location_dict.values())
     stoppings = np.array(stoppings, dtype=float)
@@ -78,13 +79,17 @@ def main():
     labels = cluster_stoppings(normalized_stoppings)
 
     clustered_stoppings = {}
+    stop_ids = list(stop_location_dict.keys())
     for label in np.unique(labels):
         mask = labels == label
-        clustered_stoppings[f"Cluster {label}"] = (
-            denormalize_stoppings(normalized_stoppings[mask], scaler)
-            .tolist()
-        )
-    plot_clusters(normalized_stoppings , labels)
+        cluster_stops = {}
+        masked_stop_ids = [stop_ids[i] for i in range(len(stop_ids)) if mask[i]]
+        denormalized_coords = denormalize_stoppings(normalized_stoppings[mask], scaler).tolist()
+        for stop_id, coords in zip(masked_stop_ids, denormalized_coords):
+            cluster_stops[stop_id] = coords
+        clustered_stoppings[f"Cluster {label}"] = cluster_stops
+    
+    plot_clusters(normalized_stoppings, labels)
 
     with open("data/jsonFiles/clustered_stoppings.json", "w") as f:
         json.dump(clustered_stoppings, f, indent=1)

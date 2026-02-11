@@ -1,0 +1,47 @@
+{
+  "Cluster 0": {
+    "num_stops": 19,
+    "num_packages": 25,
+    "packages_per_stop": 1.3157894736842106,
+    "total_weight_kg": 132.7,
+    "avg_weight_kg": 5.308,
+    "heavy_pkg_ratio_gt10kg": 0.16,
+    "total_volume_cm3": 899004.0,
+    "avg_volume_cm3": 35960.16,
+    "bulky_pkg_ratio_gt50000cm3": 0.2,
+    "avg_floor": 4.32,
+    "high_floor_ratio_ge3": 0.48,
+    "elevator_coverage_ratio": 0.56,
+    "stair_load_index": 63.0
+  },
+  "Cluster 1": {
+    "num_stops": 27,
+    "num_packages": 32,
+    "packages_per_stop": 1.1851851851851851,
+    "total_weight_kg": 258.7,
+    "avg_weight_kg": 8.084375,
+    "heavy_pkg_ratio_gt10kg": 0.3125,
+    "total_volume_cm3": 1831266.0,
+    "avg_volume_cm3": 57227.0625,
+    "bulky_pkg_ratio_gt50000cm3": 0.34375,
+    "avg_floor": 3.6875,
+    "high_floor_ratio_ge3": 0.53125,
+    "elevator_coverage_ratio": 0.65625,
+    "stair_load_index": 60.6
+  },
+  "Cluster 2": {
+    "num_stops": 9,
+    "num_packages": 11,
+    "packages_per_stop": 1.2222222222222223,
+    "total_weight_kg": 62.55,
+    "avg_weight_kg": 5.6863636363636365,
+    "heavy_pkg_ratio_gt10kg": 0.2727272727272727,
+    "total_volume_cm3": 379620.0,
+    "avg_volume_cm3": 34510.90909090909,
+    "bulky_pkg_ratio_gt50000cm3": 0.36363636363636365,
+    "avg_floor": 4.909090909090909,
+    "high_floor_ratio_ge3": 0.8181818181818182,
+    "elevator_coverage_ratio": 0.8181818181818181,
+    "stair_load_index": 0.45
+  }
+}
