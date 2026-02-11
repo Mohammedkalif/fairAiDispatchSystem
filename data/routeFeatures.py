@@ -1,5 +1,7 @@
 import json
 from math import radians, sin, cos, sqrt, atan2
+import os
+import glob
 
 datadir = "data/jsonFiles"
 
@@ -24,7 +26,6 @@ def extractFeatures(routeData):
     features = {}
 
     total_duration = routeData["summary"]["duration"]
-
     for route in routeData["routes"]:
         route_id = route["vehicle"]
 
@@ -45,7 +46,7 @@ def extractFeatures(routeData):
         stop_density = num_stops / total_distance
         parking_stress = stop_density * traffic_index
 
-        features[route_id] = {
+        features[f"Cluster {route_id}"] = {
             "total_distance": total_distance,
             "total_duration": total_duration,
             "stops": num_stops,
@@ -58,12 +59,19 @@ def extractFeatures(routeData):
 
 def main():
     all_features = {}
-
-    for n in range(0, 3):
+    
+    # Find all files matching the pattern
+    pattern = os.path.join(datadir, "routes_Cluster *.json")
+    cluster_files = glob.glob(pattern)
+    
+    for filepath in cluster_files:
+        filename = os.path.basename(filepath)
+        n = int(filename.split("Cluster ")[1].split(".json")[0])
+        
         routeData = loadData(datadir, n)
         features = extractFeatures(routeData)
         all_features.update(features)
-
+    
     with open(f"{datadir}/route_features.json", "w") as f:
         json.dump(all_features, f, indent=4)
 

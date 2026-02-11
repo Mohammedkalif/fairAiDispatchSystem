@@ -1,6 +1,5 @@
 {
   "Cluster 0": {
-    "num_stops": 19,
     "num_packages": 25,
     "packages_per_stop": 1.3157894736842106,
     "total_weight_kg": 132.7,
@@ -15,7 +14,6 @@
     "stair_load_index": 63.0
   },
   "Cluster 1": {
-    "num_stops": 27,
     "num_packages": 32,
     "packages_per_stop": 1.1851851851851851,
     "total_weight_kg": 258.7,
@@ -30,7 +28,6 @@
     "stair_load_index": 60.6
   },
   "Cluster 2": {
-    "num_stops": 9,
     "num_packages": 11,
     "packages_per_stop": 1.2222222222222223,
     "total_weight_kg": 62.55,
