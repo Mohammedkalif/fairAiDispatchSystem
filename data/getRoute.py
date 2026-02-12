@@ -20,17 +20,19 @@ def load_api_key(env_var: str = "API") -> str:
     return api_key
 
 
-def load_clustered_stoppings(filepath: str) -> Dict[str, List[List[float]]]:
+def load_clustered_stoppings(filepath: str) -> Dict[str, Dict[str, List[float]]]:
     with open(filepath, "r") as file:
         return json.load(file)
 
 
 def build_payload(
     vehicle_id: int,
-    stops: List[List[float]],
+    stops: Dict[str, List[float]],
     start: List[float],
     end: List[float]
 ) -> Dict:
+    stop_locations = list(stops.values())
+
     return {
         "vehicles": [
             {
@@ -42,7 +44,7 @@ def build_payload(
         ],
         "jobs": [
             {"id": idx + 1, "location": location}
-            for idx, location in enumerate(stops)
+            for idx, location in enumerate(stop_locations)
         ],
     }
 
