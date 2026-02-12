@@ -1,5 +1,5 @@
 {
-    "Cluster 1": {
+    "Cluster 0": {
         "total_distance": 3391.4651638170108,
         "total_duration": 897,
         "stops": 19,
@@ -7,7 +7,7 @@
         "traffic_index": 3.673730791318915,
         "parking_stress": 0.02058133628490531
     },
-    "Cluster 2": {
+    "Cluster 1": {
         "total_distance": 4018.2086248139467,
         "total_duration": 952,
         "stops": 27,
@@ -15,7 +15,7 @@
         "traffic_index": 3.290839584172231,
         "parking_stress": 0.022112507604496106
     },
-    "Cluster 3": {
+    "Cluster 2": {
         "total_distance": 2623.2408341578434,
         "total_duration": 653,
         "stops": 9,

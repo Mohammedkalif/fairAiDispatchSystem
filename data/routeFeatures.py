@@ -5,8 +5,8 @@ import glob
 
 datadir = "data/jsonFiles"
 
-def loadData(datadir, n):
-    with open(f"{datadir}/routes_Cluster {n}.json") as f:
+def loadData(filepath):
+    with open(filepath) as f:
         return json.load(f)
 
 # Haversine distance in meters
@@ -23,39 +23,38 @@ def haversine(p1, p2):
     return R * c
 
 def extractFeatures(routeData):
-    features = {}
+    routes = routeData.get("routes", [])
+    if not routes:
+        return None
 
-    total_duration = routeData["summary"]["duration"]
-    for route in routeData["routes"]:
-        route_id = route["vehicle"]
+    total_duration = routeData.get("summary", {}).get("duration", 0)
+    route = routes[0]
 
-        steps = route["steps"]
-        coords = [s["location"] for s in steps]
+    steps = route.get("steps", [])
+    coords = [s["location"] for s in steps]
 
-        total_distance = sum(
-            haversine(coords[i], coords[i + 1])
-            for i in range(len(coords) - 1)
-        )
+    total_distance = sum(
+        haversine(coords[i], coords[i + 1])
+        for i in range(len(coords) - 1)
+    )
 
-        freeflow_duration = total_distance / 13.89  # 50 km/h in m/s
-        traffic_index = total_duration / freeflow_duration
+    freeflow_duration = total_distance / 13.89 if total_distance else 0.0  # 50 km/h in m/s
+    traffic_index = (total_duration / freeflow_duration) if freeflow_duration else 0.0
 
-        job_stops = [s for s in steps if s["type"] == "job"]
-        num_stops = len(job_stops)
+    job_stops = [s for s in steps if s.get("type") == "job"]
+    num_stops = len(job_stops)
 
-        stop_density = num_stops / total_distance
-        parking_stress = stop_density * traffic_index
+    stop_density = (num_stops / total_distance) if total_distance else 0.0
+    parking_stress = stop_density * traffic_index
 
-        features[f"Cluster {route_id}"] = {
-            "total_distance": total_distance,
-            "total_duration": total_duration,
-            "stops": num_stops,
-            "stop_density": stop_density,
-            "traffic_index": traffic_index,
-            "parking_stress": parking_stress,
-        }
-
-    return features
+    return {
+        "total_distance": total_distance,
+        "total_duration": total_duration,
+        "stops": num_stops,
+        "stop_density": stop_density,
+        "traffic_index": traffic_index,
+        "parking_stress": parking_stress,
+    }
 
 def main():
     all_features = {}
@@ -64,13 +63,14 @@ def main():
     pattern = os.path.join(datadir, "routes_Cluster *.json")
     cluster_files = glob.glob(pattern)
     
-    for filepath in cluster_files:
+    for filepath in sorted(cluster_files):
         filename = os.path.basename(filepath)
         n = int(filename.split("Cluster ")[1].split(".json")[0])
-        
-        routeData = loadData(datadir, n)
+
+        routeData = loadData(filepath)
         features = extractFeatures(routeData)
-        all_features.update(features)
+        if features is not None:
+            all_features[f"Cluster {n}"] = features
     
     with open(f"{datadir}/route_features.json", "w") as f:
         json.dump(all_features, f, indent=4)
