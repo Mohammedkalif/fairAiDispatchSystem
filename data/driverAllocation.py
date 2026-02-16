@@ -2,27 +2,79 @@ import json
 import copy
 import math
 
-def openJson (filePath):
-    with open(filePath , "r") as file:
+DECAY_FACTOR = 0.9
+HEAVY_PERCENTILE = 0.75
+
+
+
+def openJson(filePath):
+    with open(filePath, "r") as file:
         return json.load(file)
 
-def addVectors(v1 , v2):
-    result = copy.deepcopy(v1)
-    for category in v2:
-        if isinstance(v2[category] , dict):
-            for feature in v2[category]:
-                result[category][feature] += v2[category][feature]
-    return result
 
-def dimensionMagnitude(vector , dimension):
+def applyDecay(driverData):
+    for driver in driverData.values():
+        for category in driver["cumulative_effort_vector"]:
+            if isinstance(driver["cumulative_effort_vector"][category], dict):
+                for feature in driver["cumulative_effort_vector"][category]:
+                    driver["cumulative_effort_vector"][category][feature] *= DECAY_FACTOR
+            else:
+                driver["cumulative_effort_vector"][category] *= DECAY_FACTOR
+
+
+
+def computeFeatureBounds(effortVectors, driverData):
+    bounds = {}
+
+    all_vectors = []
+
+    for c in effortVectors.values():
+        all_vectors.append(c)
+
+    for d in driverData.values():
+        all_vectors.append(d["cumulative_effort_vector"])
+
+    for vec in all_vectors:
+        for category, value in vec.items():
+            if isinstance(value, dict):
+                for feature, val in value.items():
+                    key = (category, feature)
+                    bounds.setdefault(key, []).append(val)
+            else:
+                key = (category, None)
+                bounds.setdefault(key, []).append(value)
+
+    minmax = {}
+    for key, values in bounds.items():
+        minmax[key] = (min(values), max(values))
+
+    return minmax
+
+
+def normalizeValue(value, min_val, max_val):
+    if max_val == min_val:
+        return 0
+    return (value - min_val) / (max_val - min_val)
+
+
+def normalizedDimensionMagnitude(vector, dimension, bounds):
+
     value = vector[dimension]
-    if isinstance(value , dict):
-        return sum(value.values())
-    else:
-        return value
 
-def computeVariance(driverData):
-    dimensions  = [
+    if isinstance(value, dict):
+        total = 0
+        for feature, val in value.items():
+            min_val, max_val = bounds[(dimension, feature)]
+            total += normalizeValue(val, min_val, max_val)
+        return total
+    else:
+        min_val, max_val = bounds[(dimension, None)]
+        return normalizeValue(value, min_val, max_val)
+
+
+def computeVariance(driverData, bounds):
+
+    dimensions = [
         "physical_load",
         "stair_load",
         "traffic_stress",
@@ -36,17 +88,20 @@ def computeVariance(driverData):
         values = []
 
         for driver in driverData.values():
-            magn = dimensionMagnitude(
-                driver["cumulative_effort_vector"], 
-                dim
+            mag = normalizedDimensionMagnitude(
+                driver["cumulative_effort_vector"],
+                dim,
+                bounds
             )
-            values.append(magn)
+            values.append(mag)
 
         mean = sum(values) / len(values)
         variance = sum((x - mean) ** 2 for x in values) / len(values)
+
         variancePerDimension[dim] = variance
 
     return variancePerDimension
+
 
 
 def fairnessPenalty(variance_dict):
@@ -59,43 +114,79 @@ def fairnessPenalty(variance_dict):
         "cognitive_density": 0.8
     }
 
-    total = 0
-
-    for dim in variance_dict:
-        total += weights[dim] * variance_dict[dim]
-
-    return total
+    return sum(weights[d] * variance_dict[d] for d in variance_dict)
 
 
-def isHeavyRoute(cluster):
-    physical = sum(cluster["physical_load"].values())
-    duration = cluster["route_distance"]["total_duration"]
-    return (physical + duration) > 1000
+def computeHeavyThreshold(effortVectors):
+
+    physical_weights = [
+        c["physical_load"]["total_weight"]
+        for c in effortVectors.values()
+    ]
+
+    durations = [
+        c["route_distance"]["total_duration"]
+        for c in effortVectors.values()
+    ]
+
+    physical_threshold = sorted(physical_weights)[
+        int(len(physical_weights) * HEAVY_PERCENTILE)
+    ]
+
+    duration_threshold = sorted(durations)[
+        int(len(durations) * HEAVY_PERCENTILE)
+    ]
+
+    return physical_threshold, duration_threshold
+
+
+def isHeavyRoute(cluster, physical_threshold, duration_threshold):
+
+    if cluster["physical_load"]["total_weight"] >= physical_threshold:
+        return True
+
+    if cluster["route_distance"]["total_duration"] >= duration_threshold:
+        return True
+
+    return False
+
+
+
+def addVectors(v1, v2):
+    result = copy.deepcopy(v1)
+    for category in v2:
+        if isinstance(v2[category], dict):
+            for feature in v2[category]:
+                result[category][feature] += v2[category][feature]
+        else:
+            result[category] += v2[category]
+    return result
+
 
 def allocateDrivers(effortVectors, driverData):
 
+    applyDecay(driverData)
+
+    bounds = computeFeatureBounds(effortVectors, driverData)
+
+    physical_threshold, duration_threshold = computeHeavyThreshold(effortVectors)
+
     assignments = {}
 
-    # Sort clusters by heaviness (heavy first)
-    sorted_clusters = sorted(
-        effortVectors.items(),
-        key=lambda x: sum(x[1]["physical_load"].values()),
-        reverse=True
-    )
+    initial_variance = computeVariance(driverData, bounds)
+    print("Initial Variance:", initial_variance)
 
-    for cluster_name, cluster_vector in sorted_clusters:
+    for cluster_name, cluster_vector in effortVectors.items():
 
         best_driver = None
         lowest_penalty = math.inf
 
         for driver_name, driver_state in driverData.items():
 
-            # Hard constraint: heavy day rule
-            if isHeavyRoute(cluster_vector):
+            if isHeavyRoute(cluster_vector, physical_threshold, duration_threshold):
                 if driver_state["consecutive_heavy_days"] >= 2:
                     continue
 
-            # Simulate
             temp_driverData = copy.deepcopy(driverData)
 
             updated_vector = addVectors(
@@ -105,23 +196,29 @@ def allocateDrivers(effortVectors, driverData):
 
             temp_driverData[driver_name]["cumulative_effort_vector"] = updated_vector
 
-            # Compute fairness
-            variance_dict = computeVariance(temp_driverData)
+            variance_dict = computeVariance(temp_driverData, bounds)
             penalty = fairnessPenalty(variance_dict)
 
             if penalty < lowest_penalty:
                 lowest_penalty = penalty
                 best_driver = driver_name
 
-        # Assign
-        if best_driver is not None:
+        if best_driver:
+
+            before = computeVariance(driverData, bounds)
 
             driverData[best_driver]["cumulative_effort_vector"] = addVectors(
                 driverData[best_driver]["cumulative_effort_vector"],
                 cluster_vector
             )
 
-            if isHeavyRoute(cluster_vector):
+            after = computeVariance(driverData, bounds)
+
+            print(f"\nCluster {cluster_name} → {best_driver}")
+            print("Variance Before:", before)
+            print("Variance After :", after)
+
+            if isHeavyRoute(cluster_vector, physical_threshold, duration_threshold):
                 driverData[best_driver]["consecutive_heavy_days"] += 1
             else:
                 driverData[best_driver]["consecutive_heavy_days"] = 0
@@ -131,12 +228,15 @@ def allocateDrivers(effortVectors, driverData):
     return assignments
 
 
-
 def main():
     effortVectors = openJson("data/jsonFiles/finalFeatures.json")
     driverData = openJson("data/jsonFiles/driversdata.json")
+
     assignments = allocateDrivers(effortVectors, driverData)
+
+    print("\nFinal Assignments:")
     print(assignments)
+
 
 if __name__ == "__main__":
     main()
