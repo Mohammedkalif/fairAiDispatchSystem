@@ -4,7 +4,7 @@ import math
 
 HEAVY_PERCENTILE = 0.75
 
-# ✅ Dimension-aware decay
+# Dimension-aware decay
 DECAY_FACTORS = {
     "physical_load": 0.85,
     "stair_load": 0.85,
@@ -183,13 +183,13 @@ def compute_vector_magnitude(vector):
 
 def allocateDrivers(effortVectors, driverData):
 
-    # 1️⃣ Apply dimension-aware decay
+    # Apply dimension-aware decay
     applyDecay(driverData)
 
-    # 2️⃣ Static bounds (routes only)
+    # Static bounds (routes only)
     bounds = compute_static_feature_bounds(effortVectors)
 
-    # 3️⃣ Heavy thresholds
+    # Heavy thresholds
     physical_threshold, duration_threshold = computeHeavyThreshold(effortVectors)
 
     assignments = {}
@@ -197,7 +197,7 @@ def allocateDrivers(effortVectors, driverData):
     initial_variance = computeVariance(driverData, bounds)
     print("Initial Variance:", initial_variance)
 
-    # 4️⃣ Sort clusters by difficulty (hardest first)
+    # Sort clusters by difficulty (hardest first)
     sorted_clusters = sorted(
         effortVectors.items(),
         key=lambda item: compute_vector_magnitude(item[1]),
@@ -243,7 +243,7 @@ def allocateDrivers(effortVectors, driverData):
 
             after = computeVariance(driverData, bounds)
 
-            print(f"\nCluster {cluster_name} → {best_driver}")
+            print(f"\nCluster {cluster_name} : {best_driver}")
             print("Variance Before:", before)
             print("Variance After :", after)
 
