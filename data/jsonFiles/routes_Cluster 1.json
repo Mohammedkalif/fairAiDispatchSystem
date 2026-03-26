@@ -11,8 +11,8 @@
     "priority": 0,
     "violations": [],
     "computing_times": {
-      "loading": 103,
-      "solving": 2,
+      "loading": 288,
+      "solving": 1,
       "routing": 0
     }
   },
