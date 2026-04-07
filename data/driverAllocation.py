@@ -224,6 +224,7 @@ def allocateDrivers(effortVectors, driverData):
     applyDecay(driverData)
 
     bounds = compute_static_feature_bounds(effortVectors)
+
     physical_threshold, duration_threshold = computeHeavyThreshold(effortVectors)
 
     assignments = {}
@@ -242,26 +243,12 @@ def allocateDrivers(effortVectors, driverData):
         best_driver = None
         lowest_penalty = math.inf
 
-        candidate_details = []   # 🔥 NEW
-        constraint_skips = []    # 🔥 NEW
-
         for driver_name, driver_state in driverData.items():
 
-            skipped = False
-            reason = None
-
-            # 🚨 Heavy constraint check
+            # Heavy constraint
             if isHeavyRoute(cluster_vector, physical_threshold, duration_threshold):
                 if driver_state["consecutive_heavy_days"] >= 2:
-                    skipped = True
-                    reason = "heavy_constraint_violation"
-
-            if skipped:
-                constraint_skips.append({
-                    "driver": driver_name,
-                    "reason": reason
-                })
-                continue
+                    continue
 
             temp_driverData = copy.deepcopy(driverData)
 
@@ -275,50 +262,32 @@ def allocateDrivers(effortVectors, driverData):
             variance_dict = computeVariance(temp_driverData, bounds)
             penalty = fairnessPenalty(variance_dict)
 
-            candidate_details.append({
-                "driver": driver_name,
-                "penalty": penalty,
-                "variance": variance_dict
-            })
-
             if penalty < lowest_penalty:
+
                 lowest_penalty = penalty
                 best_driver = driver_name
 
         if best_driver:
 
-            variance_before = computeVariance(driverData, bounds)
+            before = computeVariance(driverData, bounds)
 
             driverData[best_driver]["cumulative_effort_vector"] = addVectors(
                 driverData[best_driver]["cumulative_effort_vector"],
                 cluster_vector
             )
 
-            variance_after = computeVariance(driverData, bounds)
+            after = computeVariance(driverData, bounds)
 
-            heavy_flag = isHeavyRoute(cluster_vector, physical_threshold, duration_threshold)
+            print(f"\nCluster {cluster_name} : {best_driver}")
+            print("Variance Before:", before)
+            print("Variance After :", after)
 
-            if heavy_flag:
+            if isHeavyRoute(cluster_vector, physical_threshold, duration_threshold):
                 driverData[best_driver]["consecutive_heavy_days"] += 1
             else:
                 driverData[best_driver]["consecutive_heavy_days"] = 0
 
-            # 🔥 FINAL STRUCTURED OUTPUT
-            assignments[cluster_name] = {
-                "assigned_driver": best_driver,
-                "decision": {
-                    "selected_penalty": lowest_penalty,
-                    "candidates": candidate_details,
-                    "skipped_drivers": constraint_skips,
-                    "variance_before": variance_before,
-                    "variance_after": variance_after,
-                    "heavy_route": heavy_flag
-                }
-            }
-
-            print(f"\nCluster {cluster_name} → {best_driver}")
-            print("Variance Before:", variance_before)
-            print("Variance After :", variance_after)
+            assignments[cluster_name] = best_driver
 
     return assignments
 

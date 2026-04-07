@@ -4,9 +4,10 @@ from tracemalloc import stop
 import requests as req
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.cluster import DBSCAN
+from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
-from sklearn.neighbors import NearestCentroid 
+from scipy.spatial import distance_matrix
+from scipy.optimize import linear_sum_assignment 
 SCALER_PATH = "data/stopping_scaler.pkl"
 
 def fit_and_save_scaler(data, path=SCALER_PATH):
@@ -30,25 +31,24 @@ def denormalize_stoppings(stoppings, scaler):
     return scaler.inverse_transform(stoppings)
 
 
-def merge_noise_with_nearest_cluster(data, labels):
-
-    noise_mask = labels == -1
-    cluster_mask = ~noise_mask
-
-    if not np.any(noise_mask) or not np.any(cluster_mask):
-        return labels
-
-    centroid_model = NearestCentroid()
-    centroid_model.fit(data[cluster_mask], labels[cluster_mask])
-
-    labels[noise_mask] = centroid_model.predict(data[noise_mask])
-    return labels
-
-
-def cluster_stoppings(normalized_stoppings, eps=0.5, min_samples=5):
-    dbscan = DBSCAN(eps=eps, min_samples=min_samples)
-    labels = dbscan.fit_predict(normalized_stoppings)
-    return merge_noise_with_nearest_cluster(normalized_stoppings, labels)
+def cluster_stoppings(normalized_stoppings, max_size=50):
+    n_points = len(normalized_stoppings)
+    n_clusters = (n_points + max_size - 1) // max_size
+    
+    if n_clusters == 0:
+        return np.array([])
+        
+    kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init='auto')
+    kmeans.fit(normalized_stoppings)
+    centers = kmeans.cluster_centers_
+    
+    dist = distance_matrix(normalized_stoppings, centers)
+    cost_matrix = np.repeat(dist, max_size, axis=1)
+    
+    row_ind, col_ind = linear_sum_assignment(cost_matrix)
+    labels = col_ind // max_size
+    
+    return labels[np.argsort(row_ind)]
 
 def plot_clusters(data, labels):
     plt.figure(figsize=(6,6))
