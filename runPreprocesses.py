@@ -11,11 +11,11 @@ def run_script(script_name):
 
 if __name__ == "__main__":
     scripts = [
-    "data/cluster.py",
-    "data/getRoute.py",
-    "data/packageFeatures.py",
-    "data/routeFeatures.py",
-    "data/finalFeatures.py"
+    "cluster.py",
+    "getRoute.py",
+    "packageFeatures.py",
+    "routeFeatures.py",
+    "finalFeatures.py"
 ]
     
     for script in scripts:

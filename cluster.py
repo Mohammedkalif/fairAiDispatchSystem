@@ -8,7 +8,7 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from scipy.spatial import distance_matrix
 from scipy.optimize import linear_sum_assignment 
-SCALER_PATH = "data/stopping_scaler.pkl"
+SCALER_PATH = "stopping_scaler.pkl"
 
 def fit_and_save_scaler(data, path=SCALER_PATH):
     scaler = StandardScaler()

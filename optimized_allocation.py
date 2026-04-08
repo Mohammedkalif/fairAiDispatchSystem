@@ -23,7 +23,7 @@ DIM_WEIGHTS = {
     "physical_load": 1.5,
     "stair_load": 1.3,
     "traffic_stress": 1.0,
-    "route_distance": 1.2,  # increased importance
+    "route_distance": 1.2, 
     "cognitive_density": 0.8
 }
 
