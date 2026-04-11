@@ -1,175 +1,123 @@
-import os
-from dotenv import load_dotenv
-from langchain_groq import ChatGroq
-from typing import TypedDict, Dict, Any
-from optimized_allocation import allocateDrivers_optimized
-import json
+"""
+main.py — project entry point
+──────────────────────────────
+1. Loads and preprocesses raw data files
+2. Calls agents.supervisorGraph.run_dispatch()
+3. Prints the final allocation, fairness report, critique, and explanation
 
-load_dotenv()
-groqAPI = os.getenv("groqAPI")
-llm = ChatGroq(
-    model="openai/gpt-oss-120b",
-    api_key=groqAPI
-)
-
-class DispatchState(TypedDict):
-    effort_vectors: Dict
-    drivers: Dict
-    plan: Dict
-    allocation: Dict
-    critique: Dict
-    explanation: Dict
-
-def allocateDrivers(effortVectors, driverData):
-    return allocateDrivers_optimized(effortVectors, driverData)
-
-def openJson(filePath):
-    with open(filePath, 'r') as file:
-        return json.load(file)
-
-def planner_agent(state: DispatchState):
-
-    effort_vectors = state["effort_vectors"]
-
-    # simple rule-based (can upgrade to LLM later)
-    plan = {
-        "strategy": "fairness_strict",
-        "num_clusters": len(effort_vectors),
-        "notes": "Prioritize fairness over efficiency"
-    }
-
-    return {"plan": plan}
-
-def allocation_agent(state: DispatchState):
-
-    effort_vectors = state["effort_vectors"]
-    drivers = state["drivers"]
-
-    allocation = allocateDrivers(effort_vectors, drivers)
-
-    return {"allocation": allocation, "drivers": drivers}
-
-def critic_agent(state: DispatchState):
-
-    allocation = state["allocation"]
-
-    prompt = f"""
-You are an expert in logistics fairness systems.
-
-Analyze this allocation:
-{allocation}
-
-IMPORTANT:
-- Return ONLY valid JSON
-- Do NOT include explanations
-- Do NOT include <think> or reasoning
-
-Strict format:
-{{
-  "score": 0.0,
-  "issues": [],
-  "suggestion": ""
-}}
+Run:
+    python main.py
 """
 
-    response = llm.invoke(prompt)
+import json
+import os
+import sys
 
-    import json
-    try:
-        critique_json = json.loads(response.content)
-    except:
-        critique_json = {
-            "score": 0.5,
-            "issues": ["invalid_json_response"],
-            "suggestion": "LLM output not structured properly"
-        }
+# ── Make sure project root is on the path so `agents` is importable ──────────
+sys.path.insert(0, os.path.dirname(__file__))
 
-    return {"critique": critique_json}
+from agents.supervisorGraph import run_dispatch
 
-def reallocation_agent(state: DispatchState):
 
-    critique = state["critique"]
-    score = critique.get("score", 1)
+# ─── Data paths ───────────────────────────────────────────────────────────────
 
-    if score > 0.75:
-        return {}
-    print("Reallocation triggered")
-    for d in state["drivers"].values():
-        d["consecutive_heavy_days"] = max(0, d["consecutive_heavy_days"] - 1)
+DATA_DIR        = os.path.join(os.path.dirname(__file__), "data", "jsonFiles")
+EFFORT_VECTORS_PATH = os.path.join(DATA_DIR, "finalFeatures.json")
+DRIVERS_PATH        = os.path.join(DATA_DIR, "driversdata.json")
 
-    new_allocation = allocateDrivers(
-        state["effort_vectors"],
-        state["drivers"]
-    )
 
-    return {"allocation": new_allocation}
+# ─── Preprocessing helpers ────────────────────────────────────────────────────
 
-def explainer_agent(state: DispatchState):
+def load_json(path: str) -> dict:
+    with open(path, "r") as f:
+        return json.load(f)
 
-    allocation = state["allocation"]
 
-    prompt = f"""
-    Explain this driver allocation in simple terms.
-
-    {allocation}
-
-    For each cluster:
-    - Why that driver was chosen
-    - Mention fairness and constraints
-
-    Keep it clear and concise.
+def validate_effort_vectors(vectors: dict) -> dict:
     """
+    Basic sanity check on effort vectors:
+      - Remove clusters with all-zero physical_load (empty routes)
+      - Ensure required keys exist with defaults
+    """
+    cleaned = {}
+    for cluster_id, vec in vectors.items():
+        pl = vec.get("physical_load", {})
+        if pl.get("total_weight", 0) == 0 and pl.get("heavy_pkg_ratio", 0) == 0:
+            print(f"[Preprocess] Skipping empty cluster: {cluster_id}")
+            continue
+        # Ensure cognitive_density exists
+        vec.setdefault("cognitive_density", 0.0)
+        cleaned[cluster_id] = vec
+    return cleaned
 
-    response = llm.invoke(prompt)
 
-    return {"explanation": response.content}
-
-from langgraph.graph import StateGraph, END
-
-builder = StateGraph(DispatchState)
-
-builder.add_node("planner", planner_agent)
-builder.add_node("allocator", allocation_agent)
-builder.add_node("critic", critic_agent)
-builder.add_node("reallocator", reallocation_agent)
-builder.add_node("explainer", explainer_agent)
-def should_reallocate(state: DispatchState):
-
-    critique = state["critique"]
-
-    return critique.get("score", 1) < 0.60
-
-builder.set_entry_point("planner")
-
-builder.add_edge("planner", "allocator")
-builder.add_edge("allocator", "critic")
-
-builder.add_conditional_edges(
-    "critic",
-    should_reallocate,
-    {
-        True: "reallocator",
-        False: "explainer"
+def validate_drivers(drivers: dict) -> dict:
+    """
+    Ensure every driver has the required keys with safe defaults.
+    """
+    required_ev = {
+        "physical_load":  {"total_weight": 0, "heavy_pkg_ratio": 0, "bulky_ratio": 0},
+        "stair_load":     {"stair_load_index": 0, "avg_floor": 0, "elevator_coverage": 0},
+        "traffic_stress": {"traffic_index": 0, "parking_stress": 0, "stop_density": 0},
+        "route_distance": {"total_distance": 0, "total_duration": 0},
+        "cognitive_density": 0.0,
     }
-)
-
-builder.add_edge("reallocator", "explainer")
-builder.add_edge("explainer", END)
-
-graph = builder.compile()
-
-with open("data/jsonFiles/finalFeatures.json", "r") as f:
-    effortVectors = json.load(f)
-
-with open("data/jsonFiles/driversdata.json", "r") as f:
-    driverData = json.load(f)
+    for name, data in drivers.items():
+        data.setdefault("consecutive_heavy_days", 0)
+        ev = data.setdefault("cumulative_effort_vector", {})
+        for key, default in required_ev.items():
+            ev.setdefault(key, default)
+    return drivers
 
 
-result = graph.invoke({
-    "effort_vectors": effortVectors,
-    "drivers": driverData
-})
+# ─── Entry point ──────────────────────────────────────────────────────────────
 
-print(result["allocation"])
-print(result["critique"])
-print(result["explanation"])
+def main():
+    print("═" * 60)
+    print("Dispatch System — starting")
+    print("═" * 60)
+
+    # 1. Load raw data
+    print("\n[main] Loading data...")
+    effort_vectors = load_json(EFFORT_VECTORS_PATH)
+    driver_data    = load_json(DRIVERS_PATH)
+    print(f"[main] {len(effort_vectors)} clusters | {len(driver_data)} drivers")
+
+    # 2. Preprocess
+    print("\n[main] Preprocessing...")
+    effort_vectors = validate_effort_vectors(effort_vectors)
+    driver_data    = validate_drivers(driver_data)
+    print(f"[main] After preprocessing: {len(effort_vectors)} clusters")
+
+    # ── Add your own preprocessing steps here ─────────────────────────────
+    # e.g. merge route features, recompute stair indices, etc.
+    # ──────────────────────────────────────────────────────────────────────
+
+    # 3. Run dispatch agent
+    print("\n[main] Handing off to supervisor graph...")
+    result = run_dispatch(effort_vectors, driver_data)
+
+    # 4. Output
+    print("\n" + "═" * 60)
+    print("FINAL ALLOCATION")
+    print("═" * 60)
+    print(json.dumps(result["allocation"], indent=2))
+
+    print("\n" + "═" * 60)
+    print("FAIRNESS REPORT")
+    print("═" * 60)
+    print(json.dumps(result["fairness_report"], indent=2))
+
+    print("\n" + "═" * 60)
+    print("CRITIQUE")
+    print("═" * 60)
+    print(json.dumps(result["critique"], indent=2))
+
+    print("\n" + "═" * 60)
+    print("EXPLANATION")
+    print("═" * 60)
+    print(result["explanation"])
+
+
+if __name__ == "__main__":
+    main()
