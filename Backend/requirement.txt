@@ -13,6 +13,5 @@ langchain
 langchain-core
 langchain-community
 langchain-groq
-pygraphviz
 fastapi
 uvicorn

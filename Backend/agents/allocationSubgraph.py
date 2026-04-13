@@ -18,7 +18,7 @@ from typing import TypedDict, Dict, Any, List
 from langchain_groq import ChatGroq
 
 # Same package — direct import
-from Backend.agents.optimized_allocation import (
+from agents.optimized_allocation import (
     allocateDrivers_optimized,
     flatten_effort_vector,
     DIM_WEIGHTS,
@@ -122,7 +122,7 @@ def core_allocator_node(state: AllocationState) -> dict:
     Without this, each retry compounds effort vectors from the
     previous attempt instead of starting from the original state.
     """
-    import Backend.agents.optimized_allocation as _oa
+    import agents.optimized_allocation as _oa
 
     original = _oa.DIM_WEIGHTS.copy()
 

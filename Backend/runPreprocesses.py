@@ -1,8 +1,8 @@
-from Backend.prePreocess.cluster import main as clusterMain
-from Backend.prePreocess.getRoute import main as getRouteMain
-from Backend.prePreocess.routeFeatures import main as routeFeatureMain
-from Backend.prePreocess.packageFeatures import main as packageFeatureMain
-from Backend.prePreocess.finalFeatures import main as finalFeatureMain
+from prePreocess.cluster import main as clusterMain
+from prePreocess.getRoute import main as getRouteMain
+from prePreocess.routeFeatures import main as routeFeatureMain
+from prePreocess.packageFeatures import main as packageFeatureMain
+from prePreocess.finalFeatures import main as finalFeatureMain
 
 DATA_DIR_TEMPLATE = "data/jsonFiles{}/"
 

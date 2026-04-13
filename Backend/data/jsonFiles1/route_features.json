@@ -1,50 +1,18 @@
 {
     "Cluster 0": {
-        "total_distance": 28482.42004935836,
-        "total_duration": 6979,
+        "total_distance": 17067.617114427918,
+        "total_duration": 3032,
         "stops": 50,
-        "stop_density": 0.0017554688089478682,
-        "traffic_index": 3.403443591942384,
-        "parking_stress": 0.005974639068668352
+        "stop_density": 0.0029295243539142358,
+        "traffic_index": 2.46750789624868,
+        "parking_stress": 0.00722862447553619
     },
     "Cluster 1": {
-        "total_distance": 28810.843217356567,
-        "total_duration": 6397,
+        "total_distance": 17890.391744960263,
+        "total_duration": 4495,
         "stops": 50,
-        "stop_density": 0.0017354577102373183,
-        "traffic_index": 3.0840586417294213,
-        "parking_stress": 0.005352253348613356
-    },
-    "Cluster 2": {
-        "total_distance": 26985.186249676724,
-        "total_duration": 5949,
-        "stops": 50,
-        "stop_density": 0.0018528684418696198,
-        "traffic_index": 3.062110049397562,
-        "parking_stress": 0.005673687076060565
-    },
-    "Cluster 3": {
-        "total_distance": 42722.89997951065,
-        "total_duration": 12413,
-        "stops": 50,
-        "stop_density": 0.0011703325388487053,
-        "traffic_index": 4.03569444215371,
-        "parking_stress": 0.004723104522503361
-    },
-    "Cluster 4": {
-        "total_distance": 38828.78210270918,
-        "total_duration": 7403,
-        "stops": 50,
-        "stop_density": 0.0012877045658486255,
-        "traffic_index": 2.6482332030915146,
-        "parking_stress": 0.0034101419870528737
-    },
-    "Cluster 5": {
-        "total_distance": 21424.228742951014,
-        "total_duration": 5189,
-        "stops": 50,
-        "stop_density": 0.0023338062993960036,
-        "traffic_index": 3.364191582565797,
-        "parking_stress": 0.007851371507767067
+        "stop_density": 0.0027947962634236358,
+        "traffic_index": 3.4898928368959914,
+        "parking_stress": 0.009753539460305828
     }
 }

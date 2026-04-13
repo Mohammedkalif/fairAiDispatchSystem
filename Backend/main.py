@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
-from Backend.runPreprocesses import main as runPreprocessesMain
-from Backend.agents.supervisorGraph import run_dispatch
+from runPreprocesses import main as runPreprocessesMain
+from agents.supervisorGraph import run_dispatch
 import uvicorn
 import json
 
