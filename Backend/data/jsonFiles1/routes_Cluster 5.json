@@ -1,0 +1,810 @@
+{
+  "code": 0,
+  "summary": {
+    "cost": 5189,
+    "routes": 1,
+    "unassigned": 0,
+    "setup": 0,
+    "service": 0,
+    "duration": 5189,
+    "waiting_time": 0,
+    "priority": 0,
+    "violations": [],
+    "computing_times": {
+      "loading": 185,
+      "solving": 2,
+      "routing": 0
+    }
+  },
+  "unassigned": [],
+  "routes": [
+    {
+      "vehicle": 6,
+      "cost": 5189,
+      "setup": 0,
+      "service": 0,
+      "duration": 5189,
+      "waiting_time": 0,
+      "priority": 0,
+      "steps": [
+        {
+          "type": "start",
+          "location": [
+            78.17611956533857,
+            11.683720337350456
+          ],
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "arrival": 0,
+          "duration": 0,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.18018854525769,
+            11.683808646903447
+          ],
+          "id": 39,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 39,
+          "arrival": 36,
+          "duration": 36,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.18253422840479,
+            11.681978817433723
+          ],
+          "id": 12,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 12,
+          "arrival": 83,
+          "duration": 83,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.1867073757661,
+            11.691135381250431
+          ],
+          "id": 9,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 9,
+          "arrival": 200,
+          "duration": 200,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.18778168863145,
+            11.69280249917514
+          ],
+          "id": 3,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 3,
+          "arrival": 253,
+          "duration": 253,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.18739817812573,
+            11.695397875951034
+          ],
+          "id": 2,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 2,
+          "arrival": 396,
+          "duration": 396,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17786311874148,
+            11.691854993749455
+          ],
+          "id": 38,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 38,
+          "arrival": 696,
+          "duration": 696,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17681239203333,
+            11.689844320207891
+          ],
+          "id": 41,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 41,
+          "arrival": 880,
+          "duration": 880,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17462808471196,
+            11.686532134862304
+          ],
+          "id": 30,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 30,
+          "arrival": 941,
+          "duration": 941,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.1741084755853,
+            11.685268825900646
+          ],
+          "id": 22,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 22,
+          "arrival": 950,
+          "duration": 950,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17221011589479,
+            11.68477365545223
+          ],
+          "id": 49,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 49,
+          "arrival": 1027,
+          "duration": 1027,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17166424999841,
+            11.682896713730788
+          ],
+          "id": 47,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 47,
+          "arrival": 1107,
+          "duration": 1107,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.1703641142572,
+            11.68314956874331
+          ],
+          "id": 48,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 48,
+          "arrival": 1149,
+          "duration": 1149,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.1693553173123,
+            11.686649208508518
+          ],
+          "id": 20,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 20,
+          "arrival": 1299,
+          "duration": 1299,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.16637694912578,
+            11.68451805025937
+          ],
+          "id": 36,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 36,
+          "arrival": 1432,
+          "duration": 1432,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.16652324153286,
+            11.683712028135856
+          ],
+          "id": 7,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 7,
+          "arrival": 1465,
+          "duration": 1465,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.16811189497572,
+            11.683050082856129
+          ],
+          "id": 44,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 44,
+          "arrival": 1543,
+          "duration": 1543,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.16990379315014,
+            11.680942243223411
+          ],
+          "id": 15,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 15,
+          "arrival": 1642,
+          "duration": 1642,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17827592561255,
+            11.676440980899857
+          ],
+          "id": 33,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 33,
+          "arrival": 1834,
+          "duration": 1834,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.1773261921387,
+            11.675277956605244
+          ],
+          "id": 29,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 29,
+          "arrival": 1982,
+          "duration": 1982,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17490971740935,
+            11.672497500947811
+          ],
+          "id": 28,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 28,
+          "arrival": 2066,
+          "duration": 2066,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17459050556265,
+            11.669581372896529
+          ],
+          "id": 40,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 40,
+          "arrival": 2097,
+          "duration": 2097,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.16805879207617,
+            11.668846313997568
+          ],
+          "id": 1,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 1,
+          "arrival": 2230,
+          "duration": 2230,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17644797110545,
+            11.667385877180376
+          ],
+          "id": 31,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 31,
+          "arrival": 2464,
+          "duration": 2464,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17784290713831,
+            11.668155501379456
+          ],
+          "id": 21,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 21,
+          "arrival": 2532,
+          "duration": 2532,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17778126708055,
+            11.669921506536268
+          ],
+          "id": 10,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 10,
+          "arrival": 2588,
+          "duration": 2588,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17681910516828,
+            11.67006849855644
+          ],
+          "id": 50,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 50,
+          "arrival": 2591,
+          "duration": 2591,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17783803089424,
+            11.671865606803523
+          ],
+          "id": 13,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 13,
+          "arrival": 2641,
+          "duration": 2641,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17857740061652,
+            11.673515648663798
+          ],
+          "id": 16,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 16,
+          "arrival": 2697,
+          "duration": 2697,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.18169171313866,
+            11.672618611464944
+          ],
+          "id": 14,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 14,
+          "arrival": 2795,
+          "duration": 2795,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.1817916286986,
+            11.673887643620198
+          ],
+          "id": 34,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 34,
+          "arrival": 2893,
+          "duration": 2893,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.1798949874727,
+            11.67143816454114
+          ],
+          "id": 35,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 35,
+          "arrival": 3014,
+          "duration": 3014,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.18141084213849,
+            11.67162646548424
+          ],
+          "id": 6,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 6,
+          "arrival": 3126,
+          "duration": 3126,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.1660538494419,
+            11.661805232618905
+          ],
+          "id": 18,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 18,
+          "arrival": 3377,
+          "duration": 3377,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17153462939923,
+            11.663126597635882
+          ],
+          "id": 27,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 27,
+          "arrival": 3460,
+          "duration": 3460,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17386059545682,
+            11.668443074007074
+          ],
+          "id": 32,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 32,
+          "arrival": 3535,
+          "duration": 3535,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17712879171019,
+            11.680222151360947
+          ],
+          "id": 46,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 46,
+          "arrival": 3704,
+          "duration": 3704,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17849210774952,
+            11.682539681860057
+          ],
+          "id": 4,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 4,
+          "arrival": 3861,
+          "duration": 3861,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17958138822856,
+            11.680884964262363
+          ],
+          "id": 5,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 5,
+          "arrival": 3928,
+          "duration": 3928,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.1788004418413,
+            11.679930817991597
+          ],
+          "id": 19,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 19,
+          "arrival": 3953,
+          "duration": 3953,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17661246434646,
+            11.68200578482816
+          ],
+          "id": 42,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 42,
+          "arrival": 4112,
+          "duration": 4112,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17018294720214,
+            11.678497473623132
+          ],
+          "id": 25,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 25,
+          "arrival": 4230,
+          "duration": 4230,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17117077870104,
+            11.678017488832737
+          ],
+          "id": 17,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 17,
+          "arrival": 4284,
+          "duration": 4284,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17357457838082,
+            11.674089553163792
+          ],
+          "id": 8,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 8,
+          "arrival": 4464,
+          "duration": 4464,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17049849915362,
+            11.672157667842344
+          ],
+          "id": 26,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 26,
+          "arrival": 4642,
+          "duration": 4642,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.17002658976799,
+            11.675788855493924
+          ],
+          "id": 37,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 37,
+          "arrival": 4736,
+          "duration": 4736,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.1690242927287,
+            11.67780837680854
+          ],
+          "id": 43,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 43,
+          "arrival": 4783,
+          "duration": 4783,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.16706302328588,
+            11.679328779127564
+          ],
+          "id": 45,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 45,
+          "arrival": 4830,
+          "duration": 4830,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.16594048554201,
+            11.679566716650896
+          ],
+          "id": 24,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 24,
+          "arrival": 4895,
+          "duration": 4895,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.16439498975609,
+            11.67424624143492
+          ],
+          "id": 11,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 11,
+          "arrival": 5036,
+          "duration": 5036,
+          "violations": []
+        },
+        {
+          "type": "job",
+          "location": [
+            78.16151370849535,
+            11.67453856675127
+          ],
+          "id": 23,
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "job": 23,
+          "arrival": 5135,
+          "duration": 5135,
+          "violations": []
+        },
+        {
+          "type": "end",
+          "location": [
+            78.15988980734215,
+            11.675583838261142
+          ],
+          "setup": 0,
+          "service": 0,
+          "waiting_time": 0,
+          "arrival": 5189,
+          "duration": 5189,
+          "violations": []
+        }
+      ],
+      "violations": []
+    }
+  ]
+}

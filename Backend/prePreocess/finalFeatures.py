@@ -2,16 +2,6 @@ import json
 import re
 from pathlib import Path
 
-ROUTE_FEATURES_CANDIDATES = [
-    "data/jsonFiles/route_features.json",
-]
-PACKAGE_FEATURES_CANDIDATES = [
-    "data/jsonFiles/package_features.json",
-    "data/jsonFiles/package_features_cluster.json",
-]
-OUTPUT_PATH = "data/jsonFiles/finalFeatures.json"
-
-
 def open_json(path):
     with open(path, "r") as file:
         return json.load(file)
@@ -22,6 +12,19 @@ def first_existing_path(candidates):
         if Path(candidate).exists():
             return candidate
     raise FileNotFoundError(f"None of these files exist: {candidates}")
+
+
+def build_candidate_paths(path):
+    return {
+        "route": [
+            str(Path(path) / "route_features.json"),
+        ],
+        "package": [
+            str(Path(path) / "package_features.json"),
+            str(Path(path) / "package_features_cluster.json"),
+        ],
+        "output": str(Path(path) / "finalFeatures.json"),
+    }
 
 
 def cluster_sort_key(cluster_name):
@@ -63,25 +66,27 @@ def build_final_features(route_features, package_features):
                 "total_distance": float(route.get("total_distance", 0.0)),
                 "total_duration": float(route.get("total_duration", 0.0)),
             },
-            "cognitive_density": packages_per_stop * stop_density,
+            "cognitive_density": packages_per_stop * stop_density * 1000 if stop_density > 0 else 0,
         }
 
     return final
 
 
-def main():
-    route_path = first_existing_path(ROUTE_FEATURES_CANDIDATES)
-    package_path = first_existing_path(PACKAGE_FEATURES_CANDIDATES)
+def main(path="data/jsonFiles"):
+    candidates = build_candidate_paths(path)
+    route_path = first_existing_path(candidates["route"])
+    package_path = first_existing_path(candidates["package"])
+    output_path = candidates["output"]
 
     route_features = open_json(route_path)
     package_features = open_json(package_path)
 
     final_features = build_final_features(route_features, package_features)
 
-    with open(OUTPUT_PATH, "w") as file:
+    with open(output_path, "w") as file:
         json.dump(final_features, file, indent=2)
 
-    print(f"Final features written to {OUTPUT_PATH}")
+    print(f"Final features written to {output_path}")
 
 
 if __name__ == "__main__":

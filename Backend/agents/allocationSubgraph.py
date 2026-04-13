@@ -8,14 +8,6 @@ Nodes (in order):
   2. core_allocator   — deterministic: runs algorithm with LLM-tuned weights
   3. llm_swap_agent   — LLM: proposes up to 3 validated cluster swaps
   4. fairness_scorer  — deterministic: computes 0–1 workload equity score
-
-Fixes applied:
-  - Bug 4: core_allocator_node now deep-copies drivers before passing to
-           allocateDrivers_optimized, so in-place mutations don't bleed
-           across reallocation retries.
-  - Bug 5: llm_swap_agent_node validates consecutive_heavy_days before
-           applying any swap that would move a heavy cluster to an
-           over-burdened driver, preventing new RULE-1 violations.
 """
 
 import copy
@@ -26,7 +18,7 @@ from typing import TypedDict, Dict, Any, List
 from langchain_groq import ChatGroq
 
 # Same package — direct import
-from agents.optimized_allocation import (
+from Backend.agents.optimized_allocation import (
     allocateDrivers_optimized,
     flatten_effort_vector,
     DIM_WEIGHTS,
@@ -130,19 +122,14 @@ def core_allocator_node(state: AllocationState) -> dict:
     Without this, each retry compounds effort vectors from the
     previous attempt instead of starting from the original state.
     """
-    import agents.optimized_allocation as _oa
+    import Backend.agents.optimized_allocation as _oa
 
     original = _oa.DIM_WEIGHTS.copy()
 
     if state.get("tuned_weights"):
         _oa.DIM_WEIGHTS.update(state["tuned_weights"])
         print(f"[CoreAllocator] tuned weights: {state['tuned_weights']}")
-
-    # FIX Bug 4: deep-copy so in-place mutations inside
-    # allocateDrivers_optimized don't affect the supervisor's state.
     drivers_copy = copy.deepcopy(state["drivers"])
-
-    # Apply cap_heavy constraints
     for c in state.get("soft_constraints", []):
         if c.get("type") == "cap_heavy":
             driver = c.get("driver", "")
@@ -222,10 +209,6 @@ Return ONLY valid JSON. No markdown.
         if not (ca in updated and cb in updated
                 and updated[ca] == da and updated[cb] == db):
             continue
-
-        # FIX Bug 5: enforce consecutive_heavy_days constraint on swaps.
-        # If cluster_a is heavy, the driver receiving it (db) must have
-        # fewer than 2 consecutive heavy days — and vice-versa.
         drivers = state["drivers"]
         if ca in heavy_clusters:
             if drivers.get(db, {}).get("consecutive_heavy_days", 0) >= 2:

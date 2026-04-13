@@ -6,17 +6,6 @@ Critique sub-graph — audits the allocation after it is produced.
 Nodes (in order):
   1. critic_agent    — LLM: holistic fairness score + issues
   2. policy_checker  — deterministic: hard rule violations pull score down
-
-Fixes applied:
-  - Bug 1 (Critical): RULE-1 now only checks the drivers who were actually
-    assigned a cluster today, not all 50 drivers in the database.  The
-    previous code flagged historical violations stored in driversdata.json,
-    generating 24-30 phantom violations and crashing the score to 0.0 on
-    every run.
-  - Bug 2 (Major): The per-violation penalty is reduced from 0.15 to 0.05
-    and the total deduction is capped at 0.40, so a small number of genuine
-    violations can't single-handedly drop the score below the 0.60 retry
-    threshold by themselves.
 """
 
 import json

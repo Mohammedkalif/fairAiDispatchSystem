@@ -7,10 +7,9 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from scipy.spatial import distance_matrix
-from scipy.optimize import linear_sum_assignment 
-SCALER_PATH = "stopping_scaler.pkl"
+from scipy.optimize import linear_sum_assignment
 
-def fit_and_save_scaler(data, path=SCALER_PATH):
+def fit_and_save_scaler(data, path):
     scaler = StandardScaler()
     scaled = scaler.fit_transform(data)
     with open(path, "wb") as f:
@@ -18,7 +17,7 @@ def fit_and_save_scaler(data, path=SCALER_PATH):
     return scaled
 
 
-def load_scaler(path=SCALER_PATH):
+def load_scaler(path):
     with open(path, "rb") as f:
         return pkl.load(f)
 
@@ -50,7 +49,7 @@ def cluster_stoppings(normalized_stoppings, max_size=50):
     
     return labels[np.argsort(row_ind)]
 
-def plot_clusters(data, labels):
+def plot_clusters(data, labels , path):
     plt.figure(figsize=(6,6))
     unique_labels = np.unique(labels)
     for label in unique_labels:
@@ -60,11 +59,11 @@ def plot_clusters(data, labels):
     plt.xlabel("Feature 1")
     plt.ylabel("Feature 2")
     plt.legend()
-    plt.savefig("data/cluster_plot.png")
+    plt.savefig(f"{path}/cluster_plot.png")
 
 
-def main():
-    with open("data/jsonFiles/stoppingandpackage.json") as f:
+def main(path):
+    with open(f"{path}/stoppingandpackage.json") as f:
         data = json.load(f)
     stop_location_dict = {
         stop["stop_id"]: stop["location"]
@@ -73,8 +72,9 @@ def main():
     stoppings = list(stop_location_dict.values())
     stoppings = np.array(stoppings, dtype=float)
 
-    normalized_stoppings = fit_and_save_scaler(stoppings)
-    scaler = load_scaler()
+    scaler_path = f"{path}/stopping_scaler.pkl"
+    normalized_stoppings = fit_and_save_scaler(stoppings, scaler_path)
+    scaler = load_scaler(scaler_path)
 
     labels = cluster_stoppings(normalized_stoppings)
 
@@ -89,11 +89,7 @@ def main():
             cluster_stops[stop_id] = coords
         clustered_stoppings[f"Cluster {label}"] = cluster_stops
     
-    plot_clusters(normalized_stoppings, labels)
+    plot_clusters(normalized_stoppings, labels , path)
 
-    with open("data/jsonFiles/clustered_stoppings.json", "w") as f:
+    with open(f"{path}/clustered_stoppings.json", "w") as f:
         json.dump(clustered_stoppings, f, indent=1)
-
-
-if __name__ == "__main__":
-    main()

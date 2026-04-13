@@ -3,7 +3,6 @@ from math import radians, sin, cos, sqrt, atan2
 import os
 import glob
 
-datadir = "data/jsonFiles"
 
 def loadData(filepath):
     with open(filepath) as f:
@@ -56,11 +55,9 @@ def extractFeatures(routeData):
         "parking_stress": parking_stress,
     }
 
-def main():
+def main(path):
     all_features = {}
-    
-    # Find all files matching the pattern
-    pattern = os.path.join(datadir, "routes_Cluster *.json")
+    pattern = f"{path}/routes_Cluster *.json"
     cluster_files = glob.glob(pattern)
     
     for filepath in sorted(cluster_files):
@@ -72,7 +69,7 @@ def main():
         if features is not None:
             all_features[f"Cluster {n}"] = features
     
-    with open(f"{datadir}/route_features.json", "w") as f:
+    with open(f"{path}/route_features.json", "w") as f:
         json.dump(all_features, f, indent=4)
 
 if __name__ == "__main__":

@@ -22,19 +22,6 @@ LLM-influenced nodes (★):
     ★ llm_swap_agent     — post-allocation cluster swaps
     ★ critic_agent       — holistic fairness scoring
     ★ explainer          — plain-English daily briefing
-
-Fixes applied:
-  - Bug 3 (Major): reallocator_node() no longer decrements consecutive_heavy_days
-    across all 50 drivers on every retry.  The old logic could never bring
-    heavily-overloaded drivers (e.g. D10 with 10 days) below the 3-day
-    threshold within just 2 attempts, so the retry loop could never converge.
-    Instead, the reallocator now only adjusts the 6 drivers assigned today —
-    capping any who sit above 3 to exactly 3, which is the minimum state
-    needed for a clean second attempt without inventing fake history.
-  - Bug 4 (Major): _run_allocation() now passes a deep copy of the driver
-    dict into the allocation sub-graph so that the in-place mutations made by
-    allocateDrivers_optimized() (writing back updated effort vectors and
-    consecutive counts) don't bleed into subsequent retry attempts.
 """
 
 import copy
@@ -46,9 +33,9 @@ from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langgraph.graph import StateGraph, END
 
-from agents.contextSubgraph    import build_context_subgraph,    ContextState
-from agents.allocationSubgraph import build_allocation_subgraph, AllocationState
-from agents.critiqueSubgraph   import build_critique_subgraph,   CritiqueState
+from Backend.agents.contextSubgraph    import build_context_subgraph,    ContextState
+from Backend.agents.allocationSubgraph import build_allocation_subgraph, AllocationState
+from Backend.agents.critiqueSubgraph   import build_critique_subgraph,   CritiqueState
 
 load_dotenv()
 
@@ -57,7 +44,7 @@ load_dotenv()
 def _make_llm() -> ChatGroq:
     return ChatGroq(
         model="openai/gpt-oss-120b",
-        api_key=os.getenv("groqAPI"),
+        api_key=os.getenv("groqAPI2"),
     )
 
 MAX_REALLOCATION_ATTEMPTS = 2
@@ -116,12 +103,6 @@ def _run_context(state: DispatchState, graphs: dict) -> dict:
 
 def _run_allocation(state: DispatchState, graphs: dict) -> dict:
     print("\n══ [Supervisor] Allocation phase ══")
-
-    # FIX Bug 4: deep-copy drivers before handing to the allocation sub-graph.
-    # allocateDrivers_optimized() mutates its driverData argument in-place
-    # (writing back updated effort vectors and consecutive_heavy_days).
-    # Without the copy, each retry starts from already-modified state,
-    # compounding effort vectors incorrectly across attempts.
     drivers_snapshot = copy.deepcopy(state["drivers"])
 
     result = graphs["allocation"].invoke({
@@ -181,20 +162,7 @@ def make_critique_node(graphs):
 
 
 def reallocator_node(state: DispatchState) -> dict:
-    """
-    Prepares the driver state for a fresh allocation attempt and loops
-    back to the allocation phase.  Context is NOT re-run.
 
-    FIX Bug 3: the original code decremented consecutive_heavy_days by 1
-    for ALL 50 drivers on every retry.  With drivers starting at 10 days,
-    2 retries only brought them to 8 — still far above the 3-day limit —
-    so the loop could never converge.
-
-    New approach: only touch the drivers who are actually assigned today.
-    For those drivers, cap consecutive_heavy_days at 3 (the policy maximum)
-    so the next attempt starts from a just-within-policy baseline without
-    fabricating clean history for the other 44 drivers who aren't working.
-    """
     attempt = state.get("reallocation_attempts", 0) + 1
     print(f"\n══ [Supervisor] Reallocation attempt {attempt} ══")
 
@@ -203,15 +171,9 @@ def reallocator_node(state: DispatchState) -> dict:
     drivers_reset = copy.deepcopy(state["drivers"])
     for name, data in drivers_reset.items():
         if name in assigned_today:
-            # Cap at 3 so they're at the policy limit but not over it.
-            # The core allocator will then treat them as borderline and
-            # apply a soft penalty rather than a hard exclusion.
             data["consecutive_heavy_days"] = min(
                 data.get("consecutive_heavy_days", 0), 3
             )
-        # Drivers not assigned today are left completely unchanged —
-        # their historical counts are irrelevant for today's run and
-        # the PolicyChecker now only audits assigned drivers (Bug 1 fix).
 
     return {
         "drivers":               drivers_reset,

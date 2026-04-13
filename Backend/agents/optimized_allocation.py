@@ -2,6 +2,8 @@ import numpy as np
 import random
 import time
 
+from sklearn.preprocessing import normalize
+
 HEAVY_PERCENTILE = 0.75
 
 DECAY_FACTORS = {
@@ -101,7 +103,7 @@ def allocateDrivers_optimized(effortVectors, driverData,
     bounds_range = bounds_max - bounds_min
     bounds_range[bounds_range == 0] = 1.0
 
-    def normalize(x):
+    def _norm_vector(x):
         return (x - bounds_min) / bounds_range
 
     physical_weights   = cluster_vectors[:, 0]
@@ -111,7 +113,7 @@ def allocateDrivers_optimized(effortVectors, driverData,
     is_heavy_cluster   = (physical_weights >= physical_threshold) | (durations >= duration_threshold)
 
     def compute_weighted_magnitude(vectors):
-        normed = normalize(vectors)
+        normed = _norm_vector(vectors)
         mags   = []
         for dim, idxs in indices_map.items():
             dim_val = np.mean(normed[:, idxs], axis=1)
@@ -129,7 +131,7 @@ def allocateDrivers_optimized(effortVectors, driverData,
         return np.linalg.norm(d - c) * 0.05
 
     def calculate_penalty(efforts, cons_heavy):
-        normed        = normalize(efforts)
+        normed        = _norm_vector(efforts)
         dim_variances = 0
         driver_totals = []
         for dim, idxs in indices_map.items():
@@ -143,15 +145,12 @@ def allocateDrivers_optimized(effortVectors, driverData,
 
     best_global            = None
     best_score             = float("inf")
-    best_local_efforts     = None   # FIX Bug 7: track winning trial's arrays
-    best_local_consecutive = None   # FIX Bug 7: track winning trial's consecutive counts
+    best_local_efforts     = None 
+    best_local_consecutive = None 
 
     for trial in range(3):
-        # FIX Bug 6: randomise cluster order on trials 2 & 3 so trials explore
-        # different greedy paths instead of producing identical results.
         trial_order = base_order.copy()
         if trial > 0 and len(trial_order) > 1:
-            # Perform a few random adjacent swaps to perturb the ordering
             for _ in range(max(1, len(trial_order) // 2)):
                 i = random.randint(0, len(trial_order) - 2)
                 trial_order[i], trial_order[i + 1] = trial_order[i + 1], trial_order[i]

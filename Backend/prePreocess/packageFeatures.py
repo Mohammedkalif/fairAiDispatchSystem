@@ -3,8 +3,6 @@ from math import fsum
 import os
 import glob
 
-DATA_DIR = "data/jsonFiles"
-
 def loadClusteredData(datadir, n):
     with open(f"{datadir}/clustered_stoppings_Cluster {n}.json", "r") as f:
         return json.load(f)
@@ -55,13 +53,13 @@ def extractFeatures(cluster_data, stop_to_packages):
     
     return features
 
-def main():
-    stops = loadStopsData(DATA_DIR)
+def main(path="data/jsonFiles"):
+    stops = loadStopsData(path)
     stop_to_packages = {s["stop_id"]: s.get("packages", []) for s in stops}
     
     all_features = {}
     
-    pattern = os.path.join(DATA_DIR, "clustered_stoppings_Cluster *.json")
+    pattern = os.path.join(path, "clustered_stoppings_Cluster *.json")
     cluster_files = glob.glob(pattern)
     
     if cluster_files:
@@ -69,20 +67,21 @@ def main():
             filename = os.path.basename(filepath)
             n = int(filename.split("Cluster ")[1].split(".json")[0])
 
-            cluster_data = loadClusteredData(DATA_DIR, n)
+            cluster_data = loadClusteredData(path, n)
             features = extractFeatures(cluster_data, stop_to_packages)
             all_features.update(features)
     else:
-        combined_path = os.path.join(DATA_DIR, "clustered_stoppings.json")
+        combined_path = os.path.join(path, "clustered_stoppings.json")
         if os.path.exists(combined_path):
-            cluster_data = loadClusteredDataCombined(DATA_DIR)
+            cluster_data = loadClusteredDataCombined(path)
             all_features = extractFeatures(cluster_data, stop_to_packages)
         else:
             print("No clustered stoppings input found.")
     
     
-    with open(f"{DATA_DIR}/package_features_cluster.json", "w") as f:
+    with open(f"{path}/package_features_cluster.json", "w") as f:
         json.dump(all_features, f, indent=2)
+
 
 if __name__ == "__main__":
     main()

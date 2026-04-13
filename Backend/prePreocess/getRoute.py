@@ -6,10 +6,22 @@ from typing import List, Dict
 
 
 ORS_OPTIMIZATION_URL = "https://api.openrouteservice.org/optimization"
-DATA_DIR = "data/jsonFiles"
 
-STARTING_POINT = [78.17611956533857, 11.683720337350456]
-ENDING_POINT   = [78.15988980734215, 11.675583838261142]
+
+def _get_depot_coordinates():
+    """Load depot coordinates from environment or use defaults."""
+    load_dotenv()
+    coords_str = os.getenv(
+        "DEPOT_COORDINATES",
+        "78.17611956533857,11.683720337350456 78.15988980734215,11.675583838261142"
+    )
+    coords = coords_str.split()
+    start = [float(x) for x in coords[0].split(",")]
+    end = [float(x) for x in coords[1].split(",")]
+    return start, end
+
+
+STARTING_POINT, ENDING_POINT = _get_depot_coordinates()
 
 
 def load_api_key(env_var: str = "API") -> str:
@@ -69,14 +81,14 @@ def send_optimization_request(
     return response.json()
 
 
-def save_route(filepath: str, data: Dict) -> None:
+def save_route(filepath: str, data: Dict):
     with open(filepath, "w") as file:
         json.dump(data, file, indent=2)
 
-def main() -> None:
+def main(dirPath):
     api_key = load_api_key()
     clustered_stoppings = load_clustered_stoppings(
-        os.path.join(DATA_DIR, "clustered_stoppings.json")
+        f"{dirPath}/clustered_stoppings.json"
     )
 
     for idx, (cluster_name, stops) in enumerate(clustered_stoppings.items(), start=1):
@@ -98,7 +110,7 @@ def main() -> None:
         if result is None:
             continue
 
-        output_path = os.path.join(DATA_DIR, f"routes_{cluster_name}.json")
+        output_path = f"{dirPath}/routes_{cluster_name}.json"
         save_route(output_path, result)
 
 
