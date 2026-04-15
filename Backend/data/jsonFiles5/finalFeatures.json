@@ -1,0 +1,222 @@
+{
+  "Cluster 0": {
+    "physical_load": {
+      "total_weight": 14340.179999999998,
+      "heavy_pkg_ratio": 1.0,
+      "bulky_ratio": 0.785024154589372
+    },
+    "stair_load": {
+      "stair_load_index": 198430.77000000008,
+      "avg_floor": 18.603864734299517,
+      "elevator_coverage": 0.2584541062801933
+    },
+    "traffic_stress": {
+      "traffic_index": 3.2280796942077385,
+      "parking_stress": 0.00532672447887821,
+      "stop_density": 0.0016501217390748272
+    },
+    "route_distance": {
+      "total_distance": 30300.79467229701,
+      "total_duration": 7042.0
+    },
+    "cognitive_density": 13.663007999539568
+  },
+  "Cluster 1": {
+    "physical_load": {
+      "total_weight": 14820.170000000007,
+      "heavy_pkg_ratio": 1.0,
+      "bulky_ratio": 0.7913669064748201
+    },
+    "stair_load": {
+      "stair_load_index": 197661.77999999988,
+      "avg_floor": 18.436450839328536,
+      "elevator_coverage": 0.2925659472422062
+    },
+    "traffic_stress": {
+      "traffic_index": 2.9919218758006547,
+      "parking_stress": 0.004732437888919573,
+      "stop_density": 0.0015817384562065635
+    },
+    "route_distance": {
+      "total_distance": 31610.788625518733,
+      "total_duration": 6809.0
+    },
+    "cognitive_density": 13.19169872476274
+  },
+  "Cluster 2": {
+    "physical_load": {
+      "total_weight": 14440.749999999989,
+      "heavy_pkg_ratio": 1.0,
+      "bulky_ratio": 0.7595238095238095
+    },
+    "stair_load": {
+      "stair_load_index": 212424.88999999993,
+      "avg_floor": 19.98095238095238,
+      "elevator_coverage": 0.2571428571428571
+    },
+    "traffic_stress": {
+      "traffic_index": 2.2192716501441714,
+      "parking_stress": 0.001858989370991988,
+      "stop_density": 0.0008376574228176265
+    },
+    "route_distance": {
+      "total_distance": 59690.272703386436,
+      "total_duration": 9537.0
+    },
+    "cognitive_density": 7.036322351668063
+  },
+  "Cluster 3": {
+    "physical_load": {
+      "total_weight": 15050.010000000002,
+      "heavy_pkg_ratio": 1.0,
+      "bulky_ratio": 0.8014184397163121
+    },
+    "stair_load": {
+      "stair_load_index": 198993.06999999992,
+      "avg_floor": 18.10401891252955,
+      "elevator_coverage": 0.25531914893617025
+    },
+    "traffic_stress": {
+      "traffic_index": 2.964848574136077,
+      "parking_stress": 0.0034760678931694718,
+      "stop_density": 0.0011724267888394127
+    },
+    "route_distance": {
+      "total_distance": 42646.58610325263,
+      "total_duration": 9103.0
+    },
+    "cognitive_density": 9.918730633581433
+  },
+  "Cluster 4": {
+    "physical_load": {
+      "total_weight": 14912.760000000004,
+      "heavy_pkg_ratio": 0.9976580796252927,
+      "bulky_ratio": 0.7962529274004684
+    },
+    "stair_load": {
+      "stair_load_index": 216274.90999999995,
+      "avg_floor": 18.99063231850117,
+      "elevator_coverage": 0.24121779859484782
+    },
+    "traffic_stress": {
+      "traffic_index": 2.8792591926436124,
+      "parking_stress": 0.006700065834500166,
+      "stop_density": 0.0023270103127980128
+    },
+    "route_distance": {
+      "total_distance": 21486.79777008795,
+      "total_duration": 4454.0
+    },
+    "cognitive_density": 19.872668071295028
+  },
+  "Cluster 5": {
+    "physical_load": {
+      "total_weight": 14946.359999999991,
+      "heavy_pkg_ratio": 1.0,
+      "bulky_ratio": 0.7405660377358491
+    },
+    "stair_load": {
+      "stair_load_index": 222354.79000000007,
+      "avg_floor": 20.48820754716981,
+      "elevator_coverage": 0.27122641509433965
+    },
+    "traffic_stress": {
+      "traffic_index": 2.9376036205252967,
+      "parking_stress": 0.0035203727347283644,
+      "stop_density": 0.001198382487729525
+    },
+    "route_distance": {
+      "total_distance": 41722.906093805504,
+      "total_duration": 8824.0
+    },
+    "cognitive_density": 10.162283495946372
+  },
+  "Cluster 6": {
+    "physical_load": {
+      "total_weight": 14786.039999999992,
+      "heavy_pkg_ratio": 1.0,
+      "bulky_ratio": 0.7761904761904762
+    },
+    "stair_load": {
+      "stair_load_index": 220833.68000000002,
+      "avg_floor": 19.616666666666667,
+      "elevator_coverage": 0.24523809523809526
+    },
+    "traffic_stress": {
+      "traffic_index": 0.0,
+      "parking_stress": 0.0,
+      "stop_density": 0.0
+    },
+    "route_distance": {
+      "total_distance": 0.0,
+      "total_duration": 0.0
+    },
+    "cognitive_density": 0
+  },
+  "Cluster 7": {
+    "physical_load": {
+      "total_weight": 15557.10000000001,
+      "heavy_pkg_ratio": 1.0,
+      "bulky_ratio": 0.7750556792873051
+    },
+    "stair_load": {
+      "stair_load_index": 197075.0900000001,
+      "avg_floor": 17.88195991091314,
+      "elevator_coverage": 0.25835189309576834
+    },
+    "traffic_stress": {
+      "traffic_index": 2.1446553361189626,
+      "parking_stress": 0.00200012598154708,
+      "stop_density": 0.0009326095190505399
+    },
+    "route_distance": {
+      "total_distance": 53613.006278236804,
+      "total_duration": 8278.0
+    },
+    "cognitive_density": 8.37483348107385
+  },
+  "Cluster 8": {
+    "physical_load": {
+      "total_weight": 14343.009999999997,
+      "heavy_pkg_ratio": 1.0,
+      "bulky_ratio": 0.7649880095923262
+    },
+    "stair_load": {
+      "stair_load_index": 223686.59999999995,
+      "avg_floor": 20.170263788968825,
+      "elevator_coverage": 0.23980815347721818
+    },
+    "traffic_stress": {
+      "traffic_index": 3.2604540227685166,
+      "parking_stress": 0.00720251387314474,
+      "stop_density": 0.002209052427314691
+    },
+    "route_distance": {
+      "total_distance": 22634.139136652208,
+      "total_duration": 5313.0
+    },
+    "cognitive_density": 18.423497243804523
+  },
+  "Cluster 9": {
+    "physical_load": {
+      "total_weight": 13776.870000000004,
+      "heavy_pkg_ratio": 1.0,
+      "bulky_ratio": 0.7422680412371134
+    },
+    "stair_load": {
+      "stair_load_index": 198144.82999999984,
+      "avg_floor": 19.675257731958762,
+      "elevator_coverage": 0.2628865979381443
+    },
+    "traffic_stress": {
+      "traffic_index": 2.6602426672269477,
+      "parking_stress": 0.002830215508625889,
+      "stop_density": 0.0010638937355200463
+    },
+    "route_distance": {
+      "total_distance": 46997.17493454296,
+      "total_duration": 9001.0
+    },
+    "cognitive_density": 8.25581538763556
+  }
+}

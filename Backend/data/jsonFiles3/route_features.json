@@ -1,0 +1,50 @@
+{
+    "Cluster 0": {
+        "total_distance": 21760.85603546786,
+        "total_duration": 5418,
+        "stops": 50,
+        "stop_density": 0.00229770372629208,
+        "traffic_index": 3.458320751598226,
+        "parking_stress": 0.007946196477660471
+    },
+    "Cluster 1": {
+        "total_distance": 34468.49310723255,
+        "total_duration": 6830,
+        "stops": 50,
+        "stop_density": 0.001450600113107598,
+        "traffic_index": 2.752330939007416,
+        "parking_stress": 0.003992531571433699
+    },
+    "Cluster 2": {
+        "total_distance": 30110.794778186373,
+        "total_duration": 7313,
+        "stops": 50,
+        "stop_density": 0.0016605340499421912,
+        "traffic_index": 3.373460273907728,
+        "parking_stress": 0.005601745650951093
+    },
+    "Cluster 3": {
+        "total_distance": 22705.382899645563,
+        "total_duration": 4768,
+        "stops": 50,
+        "stop_density": 0.002202120978139528,
+        "traffic_index": 2.916820222443103,
+        "parking_stress": 0.006423191001303561
+    },
+    "Cluster 4": {
+        "total_distance": 26950.379618229497,
+        "total_duration": 6349,
+        "stops": 50,
+        "stop_density": 0.0018552614363242408,
+        "traffic_index": 3.2722214398920397,
+        "parking_stress": 0.006070826248545081
+    },
+    "Cluster 5": {
+        "total_distance": 32338.94297471333,
+        "total_duration": 5972,
+        "stops": 50,
+        "stop_density": 0.0015461235093273246,
+        "traffic_index": 2.5650522982418327,
+        "parking_stress": 0.003965887660965782
+    }
+}
